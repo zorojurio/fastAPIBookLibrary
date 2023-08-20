@@ -15,7 +15,8 @@ class Settings:
     DATABASE_URL = f"mysql+pymysql://{MARIA_USERNAME}:{MARIA_PASSWORD}@{MARIA_ENDPOINT}:{MARIA_PORT}/{MARIA_DB_NAME}"
     SECRET_KEY: str = os.getenv("SECRET_KEY")
     ALGORITHM = os.getenv("ALGORITHM", "HS256")
-    ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", 30))
+    ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", 3000))
+    IMAGE_DIR = os.getenv("IMAGE_DIR", "/images")
 
 
 settings = Settings()
