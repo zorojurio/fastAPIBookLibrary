@@ -3,12 +3,10 @@ from starlette.staticfiles import StaticFiles
 
 from connection import engine
 from models import users
-from routes.route_homepage import general_pages_router
-from routes.user_auth import auth
+from webapp.routes.route_homepage import general_pages_router
+from webapp.routes.user_auth import auth
 
-
-def create_tables():
-    users.Base.metadata.create_all(bind=engine)
+users.Base.metadata.create_all(bind=engine)
 
 
 def include_router(application):
@@ -21,7 +19,6 @@ def configure_static(application):
 
 
 def start_application():
-    create_tables()
     application = FastAPI()
     include_router(application)
     configure_static(application)

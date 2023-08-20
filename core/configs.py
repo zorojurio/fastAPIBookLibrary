@@ -13,6 +13,9 @@ class Settings:
     MARIA_PORT: str = os.getenv("MARIA_PORT", 3306)
     MARIA_DB_NAME: str = os.getenv("MARIA_DB_NAME")
     DATABASE_URL = f"mysql+pymysql://{MARIA_USERNAME}:{MARIA_PASSWORD}@{MARIA_ENDPOINT}:{MARIA_PORT}/{MARIA_DB_NAME}"
+    SECRET_KEY: str = os.getenv("SECRET_KEY")
+    ALGORITHM = os.getenv("ALGORITHM", "HS256")
+    ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", 30))
 
 
 settings = Settings()

@@ -5,14 +5,49 @@
 {% endblock %}
 
 {% block content %}
+    <div class="container">
 
+        <div class="row mt-5">
+            <div class="col-6">
+
+            </div>
+            <div class="col-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h2>Sign In</h2>
+                        {% for error in errors %}
+                            <div class="alert alert-danger alert-dismissible">
+                                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+                        <form method="post">
+                            <div class="mb-3">
+                                <label>Username</label>
+                                <input type="text" required class="form-control" name="username" value="{{ username }}"
+                                       placeholder="username">
+                            </div>
+
+                            <div class="mb-3">
+                                <label>Password</label>
+                                <input type="password" required placeholder="Password"
+                                       value="{{ password }}" name="password" class="form-control">
+                            </div>
+                            <small class="text-muted">If you do not have an account please Sign Up?
+                                <a class="btn btn-sm btn-link" href="/register">Sign Up</a>
+                            </small>
+                            <div class="text-right mt-5">
+                                <button class="btn btn-sm btn-primary" type="submit">Sign In</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
 
 
 {% block scripts %}
-    <div class="md-5">
-        <h1>
-            Sign In Page
-        </h1>
-    </div>
+
 {% endblock %}

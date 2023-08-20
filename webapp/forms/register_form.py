@@ -2,6 +2,7 @@ from typing import List
 from typing import Optional
 
 from fastapi import Request
+from pydantic import EmailStr
 
 
 class UserCreateForm:
@@ -9,7 +10,7 @@ class UserCreateForm:
         self.request: Request = request
         self.errors: List = []
         self.username: Optional[str] = None
-        self.email: Optional[str] = None
+        self.email: Optional[EmailStr] = None
         self.password: Optional[str] = None
         self.confirm_password: Optional[str] = None
 
