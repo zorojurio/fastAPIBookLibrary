@@ -7,6 +7,7 @@ from starlette.staticfiles import StaticFiles
 
 from core.logger import get_logger
 from connection import Session, get_db
+from handlers.hasher import Hasher
 from handlers.user import UserHandler
 from schemas.users import UserCreate
 from webapp.users.form import UserCreateForm
@@ -45,13 +46,15 @@ async def register(request: Request,  db: Session = Depends(get_db)):
     logger.debug(f'{user_create_form.__dict__}')
     await user_create_form.load_data()
     if await user_create_form.is_valid():
+        hashed_password = Hasher.hash_password(user_create_form.password)
         user = UserCreate(
-            username=user_create_form.username, email=user_create_form.email, password=user_create_form.password
+            username=user_create_form.username, email=user_create_form.email, password=hashed_password
         )
+        logger.debug(f'Form is Successfully Validated {user.__dict__}')
         try:
             UserHandler.create_new_user(user=user, db=db)
             return responses.RedirectResponse(
-                "/?msg=Successfully-Registered", status_code=status.HTTP_201_CREATED
+                "/?msg=Successfully-Registered", status_code=status.HTTP_302_FOUND
             )
         except IntegrityError:
             user_create_form.__dict__.get("errors").append("Duplicate username or email")
