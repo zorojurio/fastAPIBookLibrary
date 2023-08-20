@@ -1,5 +1,3 @@
-
-
 from sqlalchemy import Boolean, func, DateTime, Text
 from sqlalchemy import Column
 from sqlalchemy import Integer
@@ -17,4 +15,3 @@ class User(Base):
     is_superuser = Column(Boolean(), default=False)
     created_at = Column(DateTime, default=func.now())
     updated_at = Column(DateTime, default=func.now(), onupdate=func.now())
-

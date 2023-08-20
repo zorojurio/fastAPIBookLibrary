@@ -20,7 +20,11 @@ def include_router(application):
 
 
 def configure_static(application):
-    application.mount("/static", StaticFiles(directory="static"), name="static")
+    application.mount(
+        "/static",
+        StaticFiles(directory="static"),
+        name="static"
+    )
 
 
 def start_application():

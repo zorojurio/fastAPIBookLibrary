@@ -1,9 +1,8 @@
 from logging.config import fileConfig
 
+from alembic import context
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
-
-from alembic import context
 
 from core.configs import settings
 from models import users, books
@@ -24,6 +23,7 @@ if config.config_file_name is not None:
 # target_metadata = mymodel.Base.metadata
 target_metadata = users.Base.metadata
 target_metadata = books.Base.metadata
+
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:

@@ -13,7 +13,8 @@ class BookHandler:
             author=book.author,
             publication_date=book.publication_date,
             isbn=book.isbn,
-            cover_image=book.cover_image
+            cover_image=book.cover_image,
+            user_id=book.user_id
         )
         self.session.add(book)
         self.session.commit()

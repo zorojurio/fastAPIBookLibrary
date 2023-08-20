@@ -19,16 +19,20 @@ logger = get_logger(__name__)
 
 class CustomHeaderCookieAuth(OAuth2):
     def __init__(
-        self,
-        token_url: str,
-        scheme_name: Optional[str] = None,
-        scopes: Optional[Dict[str, str]] = None,
-        auto_error: bool = True,
+            self,
+            token_url: str,
+            scheme_name: Optional[str] = None,
+            scopes: Optional[Dict[str, str]] = None,
+            auto_error: bool = True,
     ):
         if not scopes:
             scopes = {}
-        flows = OAuthFlowsModel(password={"tokenUrl": token_url, "scopes": scopes})
-        super().__init__(flows=flows, scheme_name=scheme_name, auto_error=auto_error)
+        flows = OAuthFlowsModel(
+            password={"tokenUrl": token_url, "scopes": scopes}
+        )
+        super().__init__(flows=flows,
+                         scheme_name=scheme_name,
+                         auto_error=auto_error)
 
     async def __call__(self, request: Request) -> Optional[str]:
         header_authorization: str = request.headers.get("Authorization")
@@ -69,7 +73,7 @@ oauth2_scheme = CustomHeaderCookieAuth(token_url="token")
 
 
 def get_current_user_from_token(
-    token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)
+        token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)
 ):
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,

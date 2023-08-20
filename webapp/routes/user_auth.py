@@ -6,8 +6,8 @@ from starlette import status
 from starlette.responses import HTMLResponse
 from starlette.staticfiles import StaticFiles
 
-from core.logger import get_logger
 from connection import Session, get_db
+from core.logger import get_logger
 from handlers.hasher import Hasher
 from handlers.token import create_access_token
 from handlers.user import UserHandler
@@ -24,17 +24,20 @@ logger = get_logger(__name__)
 
 @auth.get("/login", response_class=HTMLResponse)
 async def sign_in(request: Request):
-    logger.info(f'Process started for Get Login Page')
+    logger.info('Process started for Get Login Page')
     render_data = {
         'request': request,
 
     }
-    return templates.TemplateResponse('auth/sign_in_page.html', render_data)
+    return templates.TemplateResponse(
+        'auth/sign_in_page.html',
+        render_data
+    )
 
 
 @auth.post("/login")
 async def login(request: Request, db: Session = Depends(get_db)):
-    logger.info(f'Process started for Post Login Page')
+    logger.info('Process started for Post Login Page')
     login_form = LoginForm(request)
     await login_form.load_data()
     logger.debug(f'{login_form.__dict__}')
@@ -57,12 +60,15 @@ async def login(request: Request, db: Session = Depends(get_db)):
         else:
             logger.debug(f'{user.username} Authentication Failed')
             login_form.errors.append('Invalid Username or Password')
-    return templates.TemplateResponse("auth/sign_in_page.html", login_form.__dict__)
+    return templates.TemplateResponse(
+        "auth/sign_in_page.html",
+        login_form.__dict__
+    )
 
 
 @auth.get("/register", response_class=HTMLResponse)
-async def register(request: Request):
-    logger.info(f'Process started for Get Sign Up Page')
+async def register_get(request: Request):
+    logger.info('Process started for Get Sign Up Page')
     render_data = {
         'request': request,
 
@@ -71,8 +77,8 @@ async def register(request: Request):
 
 
 @auth.post("/register")
-async def register(request: Request,  db: Session = Depends(get_db)):
-    logger.info(f'Process started for Sign Up User')
+async def register_post(request: Request, db: Session = Depends(get_db)):
+    logger.info('Process started for Sign Up User')
     user_create_form = UserCreateForm(request)
     await user_create_form.load_data()
     logger.debug(f'{user_create_form.__dict__}')
@@ -80,7 +86,9 @@ async def register(request: Request,  db: Session = Depends(get_db)):
         try:
             hashed_password = Hasher.hash_password(user_create_form.password)
             user = UserCreate(
-                username=user_create_form.username, email=user_create_form.email, password=hashed_password
+                username=user_create_form.username,
+                email=user_create_form.email,
+                password=hashed_password
             )
             logger.debug(f'Form is Successfully Validated {user.__dict__}')
             user_handler = UserHandler(session=db)
@@ -89,11 +97,14 @@ async def register(request: Request,  db: Session = Depends(get_db)):
                 "/login", status_code=status.HTTP_302_FOUND
             )
         except IntegrityError:
-            user_create_form.__dict__.get("errors").append("Duplicate username or email")
+            (user_create_form.__dict__.get("errors")
+             .append("Duplicate username or email"))
         except ValidationError as ve:
-            user_create_form.__dict__.get("errors").append(f"{ve.errors()[0].get('msg')}")
+            (user_create_form.__dict__.get("errors")
+             .append(f"{ve.errors()[0].get('msg')}"))
         except Exception as e:
             logger.error(f'Error Occurred {e}')
-            user_create_form.__dict__.get("errors").append('Something went wrong please contact support')
-    return templates.TemplateResponse("auth/sign_up_page.html", user_create_form.__dict__)
-
+            (user_create_form.__dict__.get("errors").
+             append('Something went wrong please contact support'))
+    return templates.TemplateResponse(
+        "auth/sign_up_page.html", user_create_form.__dict__)

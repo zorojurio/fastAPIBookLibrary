@@ -22,7 +22,9 @@ class UserHandler:
         return user
 
     def get_user_by_username(self, username: str):
-        user = self.session.query(User).filter(User.username == username).first()
+        user = self.session.query(User).filter(
+            User.username == username
+        ).first()
         if user:
             user_data = UserInDataBase(**user.__dict__)
             return user_data
@@ -32,6 +34,8 @@ class UserHandler:
         existing_user = self.get_user_by_username(username=user.username)
         if not existing_user:
             return False
-        if not Hasher.verify_password(plain_password=user.password, hashed_password=existing_user.hashed_password):
+        if not Hasher.verify_password(
+                plain_password=user.password,
+                hashed_password=existing_user.hashed_password):
             return False
         return existing_user

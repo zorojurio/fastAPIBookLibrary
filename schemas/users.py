@@ -14,6 +14,7 @@ class UserLogin(BaseModel):
 
 
 class UserInDataBase(BaseModel):
+    id: int
     username: str
     hashed_password: str
     email: str

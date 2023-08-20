@@ -1,5 +1,4 @@
 import logging
-
 import sys
 
 from core.configs import settings
@@ -22,4 +21,3 @@ def get_logger(n=__name__):
 
     logger.propagate = 0
     return logger
-
