@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from starlette.staticfiles import StaticFiles
 
 from connection import engine
+from exception_handler import add_exception_handler
 from models import users, books
 from webapp.routes.books import books_router
 from webapp.routes.route_homepage import general_pages_router
@@ -32,6 +33,7 @@ def start_application():
     create_tables()
     include_router(application)
     configure_static(application)
+    add_exception_handler(application)
     return application
 
 

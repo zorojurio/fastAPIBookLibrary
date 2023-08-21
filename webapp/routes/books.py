@@ -37,7 +37,8 @@ async def create_book_get(request: Request, ):
 
 @books_router.post('/create',
                    dependencies=[Depends(get_current_user_from_token)])
-async def create_book(request: Request, cover_image: UploadFile = File(),
+async def create_book(request: Request,
+                      cover_image: UploadFile = File(),
                       current_user: User = Depends(
                           get_current_user_from_token
                       ),
@@ -93,12 +94,44 @@ async def create_book(request: Request, cover_image: UploadFile = File(),
 
 @books_router.get("/list",
                   response_class=HTMLResponse,
+
                   dependencies=[Depends(get_current_user_from_token)])
-async def create_book_get(request: Request, ):
+async def create_book_post(request: Request,
+                           current_user: User = Depends(
+                               get_current_user_from_token
+                           ),
+                           db: Session = Depends(get_db)):
     logger.info('Process started for Get Book List Page')
+
+    book_handler = BookHandler(session=db)
+    books = book_handler.get_book_list(current_user.id)
     render_data = {
         'request': request,
-        'page_type': 'Create Book'
+        'books': books
+    }
+    return templates.TemplateResponse(
+        'books/book_list.html',
+        render_data
+    )
+
+
+@books_router.get("/{book_id}",
+                  response_class=HTMLResponse,
+
+                  dependencies=[Depends(get_current_user_from_token)])
+async def view_book_get(request: Request,
+                        book_id: str,
+                        current_user: User = Depends(
+                            get_current_user_from_token
+                        ),
+                        db: Session = Depends(get_db)):
+    logger.info('Process started for Get Book List Page')
+
+    book_handler = BookHandler(session=db)
+    books = book_handler.book_by_userid_book_id(current_user.id, book_id=book_id)
+    render_data = {
+        'request': request,
+        'books': books
     }
     return templates.TemplateResponse(
         'books/book_list.html',

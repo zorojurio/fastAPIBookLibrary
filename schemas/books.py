@@ -11,3 +11,7 @@ class BookCreate(BaseModel):
     isbn: Optional[str]
     cover_image: Optional[str]
     user_id: int
+
+
+class BooksList(BookCreate):
+    id: int

@@ -20,6 +20,7 @@ class Settings:
         "ACCESS_TOKEN_EXPIRE_MINUTES", 3000
     ))
     IMAGE_DIR = os.getenv("IMAGE_DIR", "/images")
+    DEBUG_MODE = os.getenv("DEBUG_MODE", True)
 
 
 settings = Settings()

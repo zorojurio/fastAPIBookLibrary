@@ -11,6 +11,7 @@ from jose import jwt, JWTError
 
 from connection import Session, get_db
 from core.configs import settings
+from core.exceptions import CustomAuthException
 from core.logger import get_logger
 from handlers.user import UserHandler
 
@@ -59,7 +60,7 @@ class CustomHeaderCookieAuth(OAuth2):
             authorization = False
         if not authorization or scheme.lower() != "bearer":
             if self.auto_error:
-                raise HTTPException(
+                raise CustomAuthException(
                     status_code=status.HTTP_401_UNAUTHORIZED,
                     detail="Not authenticated",
                     headers={"WWW-Authenticate": "Bearer"},
@@ -75,7 +76,7 @@ oauth2_scheme = CustomHeaderCookieAuth(token_url="token")
 def get_current_user_from_token(
         token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)
 ):
-    credentials_exception = HTTPException(
+    credentials_exception = CustomAuthException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
     )

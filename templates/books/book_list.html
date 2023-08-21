@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Book List
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h2 class="text-primary text-center">Book list</h2>
+        <div class="row mt-5">
+            <div class="col-sm-12 col-md-12 col-lg-12 mr-auto">
+                <table class="table">
+                    <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">Book ID</th>
+                        <th scope="col">Title</th>
+                        <th scope="col">Author</th>
+                        <th scope="col">Publication Date</th>
+                        <th scope="col">ISBN</th>
+                        <th scope="col">Action</th>
+
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for book in books %}
+                    	<tr>
+                        <th scope="row">{{ book.id }}</th>
+                        <td>
+                            <a href="/books/{{ book.id }}" class="text-primary">
+                                {{ book.title }}
+                            </a>
+                        </td>
+                        <td>{{ book.author }}</td>
+                        <td>{{ book.publication_date }}</td>
+                        <td>{{ book.isbn }}</td>
+                        <td>
+                            <a href="" class="btn btn-warning text-white btn-sm">Update</a>
+                            <a href="" class="btn btn-danger text-white btn-sm">Delete</a>
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+
+                    </tbody>
+                </table>
+
+
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block scripts %}
+{% endblock %}
