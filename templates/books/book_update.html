@@ -65,23 +65,23 @@
 
 {% block scripts %}
     <script>
-    document.getElementById('updateForm').addEventListener('submit', function(event) {
-        event.preventDefault();
+        document.getElementById('updateForm').addEventListener('submit', function (event) {
+            event.preventDefault();
 
-        // Extract form data
-        const formData = new FormData(event.target);
-        console.log(formData)
-        // Send PUT request using AJAX or fetch
-        fetch('{{ book.id }}', {
-            method: 'PATCH',
-            body: formData
-        })
-        .then(data => {
-            window.location.href = '/books/list';
-        })
-        .catch(error => {
-            console.log(error);
+            // Extract form data
+            const formData = new FormData(event.target);
+            console.log(formData)
+            // Send PUT request using AJAX or fetch
+            fetch('{{ book.id }}', {
+                method: 'PATCH',
+                body: formData
+            })
+                .then(data => {
+                    window.location.href = '/books/list';
+                })
+                .catch(error => {
+                    console.log(error);
+                });
         });
-    });
     </script>
 {% endblock %}

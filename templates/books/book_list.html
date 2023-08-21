@@ -23,22 +23,24 @@
                     </thead>
                     <tbody>
                     {% for book in books %}
-                    	<tr>
-                        <th scope="row">{{ book.id }}</th>
-                        <td>
-                            <a href="/books/{{ book.id }}" class="text-primary">
-                                {{ book.title }}
-                            </a>
-                        </td>
-                        <td>{{ book.author }}</td>
-                        <td>{{ book.publication_date }}</td>
-                        <td>{{ book.isbn }}</td>
-                        <td>
-                            <a href="/books/update/{{ book.id }}" class="btn btn-warning text-white btn-sm">Update</a>
-                            <a  onclick="delete_book({{ book.id }})" class="btn btn-danger text-white btn-sm">Delete</a>
-                        </td>
+                        <tr>
+                            <th scope="row">{{ book.id }}</th>
+                            <td>
+                                <a href="/books/{{ book.id }}" class="text-primary">
+                                    {{ book.title }}
+                                </a>
+                            </td>
+                            <td>{{ book.author }}</td>
+                            <td>{{ book.publication_date }}</td>
+                            <td>{{ book.isbn }}</td>
+                            <td>
+                                <a href="/books/update/{{ book.id }}"
+                                   class="btn btn-warning text-white btn-sm">Update</a>
+                                <a onclick="delete_book({{ book.id }})"
+                                   class="btn btn-danger text-white btn-sm">Delete</a>
+                            </td>
 
-                    </tr>
+                        </tr>
 
                     {% endfor %}
 
@@ -54,16 +56,17 @@
 
 
 {% block scripts %}
-<script type="text/javascript">
-    function delete_book(id){
-        fetch('/books/delete/'+id,{
-            method:'DELETE',})
-        .then(data => {
-            window.location.href = '/books/list';
-        })
-        .catch(error => {
-            console.log(error);
-        });
-    }
-</script>
+    <script type="text/javascript">
+        function delete_book(id) {
+            fetch('/books/delete/' + id, {
+                method: 'DELETE',
+            })
+                .then(data => {
+                    window.location.href = '/books/list';
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+        }
+    </script>
 {% endblock %}
