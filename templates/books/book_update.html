@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {{ page_type }}
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+
+        <div class="row mt-5">
+            <div class="col-6">
+
+            </div>
+            <div class="col-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h2 class="text-center text-primary"> {{ page_type }}</h2>
+                        {% for error in errors %}
+                            <div class="alert alert-danger alert-dismissible">
+                                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+
+                        <form id="updateForm" method="post" enctype="multipart/form-data">
+                            <input type="hidden" name="id" value="{{ book.id }}">
+                            <div class="mb-3">
+                                <label>Title</label>
+                                <input type="text" required class="form-control" name="title" value="{{ book.title }}"
+                                       placeholder="Title of the book">
+                            </div>
+
+                            <div class="mb-3">
+                                <label>Author</label>
+                                <input type="text" required placeholder="Author"
+                                       value="{{ book.author }}" name="author" class="form-control">
+                            </div>
+                            <div class="mb-3">
+                                <label>Publication Date</label>
+                                <input type="date" placeholder="Publication Date"
+                                       value="{{ book.publication_date }}" name="publication_date" class="form-control">
+                            </div>
+                            <div class="mb-3">
+                                <label>ISBN</label>
+                                <input type="text" placeholder="ISBN"
+                                       value="{{ book.isbn }}" name="isbn" class="form-control">
+                            </div>
+                            <div class="mb-3">
+                                <label>Cover Image</label>
+                                <input type="file" placeholder="Upload Cover Image of the Book"
+                                       value="{{ cover_image }}" name="cover_image" class="form-control">
+                            </div>
+
+                            <div class="text-right mt-5">
+                                <button class="btn btn-sm btn-primary" type="submit">{{ page_type }}</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block scripts %}
+    <script>
+    document.getElementById('updateForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        // Extract form data
+        const formData = new FormData(event.target);
+        console.log(formData)
+        // Send PUT request using AJAX or fetch
+        fetch('{{ book.id }}', {
+            method: 'PATCH',
+            body: formData
+        })
+        .then(data => {
+            window.location.href = '/books/list';
+        })
+        .catch(error => {
+            console.log(error);
+        });
+    });
+    </script>
+{% endblock %}

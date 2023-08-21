@@ -15,3 +15,7 @@ class BookCreate(BaseModel):
 
 class BooksList(BookCreate):
     id: int
+
+
+class BookUpdate(BooksList):
+    pass

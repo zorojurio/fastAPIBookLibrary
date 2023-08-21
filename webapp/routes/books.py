@@ -128,12 +128,82 @@ async def view_book_get(request: Request,
     logger.info('Process started for Get Book List Page')
 
     book_handler = BookHandler(session=db)
-    books = book_handler.book_by_userid_book_id(current_user.id, book_id=book_id)
+    book = book_handler.book_by_userid_book_id(current_user.id, book_id=book_id)
     render_data = {
         'request': request,
-        'books': books
+        'books': book
     }
     return templates.TemplateResponse(
         'books/book_list.html',
         render_data
+    )
+
+
+@books_router.get("/update/{book_id}",
+                  response_class=HTMLResponse,
+                  dependencies=[Depends(get_current_user_from_token)]
+                  )
+async def update_book_get(book_id: str,
+                          request: Request,
+                          current_user: User = Depends(get_current_user_from_token),
+                          db: Session = Depends(get_db)):
+    logger.info('Process started for Get Book Update Page')
+    book_handler = BookHandler(session=db)
+    book = book_handler.book_by_userid_book_id(current_user.id, book_id=book_id)
+    render_data = {
+        'request': request,
+        'page_type': 'Update Book',
+        'book': book
+
+    }
+    return templates.TemplateResponse('books/book_update.html', render_data)
+
+
+@books_router.patch("/update/{book_id}",
+                    response_class=HTMLResponse,
+                    dependencies=[Depends(get_current_user_from_token)]
+                    )
+async def update_book_put(book_id: str,
+                          request: Request,
+                          cover_image: UploadFile = File(),
+                          db: Session = Depends(get_db)):
+    logger.info('Process started for Put Book Update Page')
+    book_form = BookForm(request)
+    await book_form.load_data()
+    logger.debug(f'{book_form.__dict__}')
+    if await book_form.is_valid():
+        try:
+            image_path = None
+            if cover_image.filename:
+                file_content = await cover_image.read()
+                image_path = f".{settings.IMAGE_DIR}/{cover_image.filename}"
+                logger.debug(f'Saving image in {image_path}')
+                with open(image_path, 'wb') as file:
+                    file.write(file_content)
+            book_handler = BookHandler(session=db)
+            book_data = book_handler.prepare_update_data(book_form, image_path)
+            book_handler.update_book(book_data, book_id)
+            logger.debug(f"Book Update {book_data}")
+            return responses.RedirectResponse(
+                "/books/list", status_code=status.HTTP_303_SEE_OTHER
+            )
+        except IntegrityError as i:
+            logger.error(f'Duplicate auther or title {i}')
+            (book_form.__dict__.get("errors").
+             append("Duplicate auther or title or Isbn"))
+        except ValidationError as ve:
+            logger.error(f"{ve.errors()[0].get('msg')}")
+            (book_form.__dict__.get("errors").
+             append(f"{ve.errors()[0].get('msg')}"))
+        except Exception as e:
+            logger.error(f'Error Occurred {e}')
+            (book_form.__dict__.get("errors").
+             append('Something went wrong please contact support'))
+        return templates.TemplateResponse(
+            "books/book_update.html",
+            book_form.__dict__
+        )
+    return templates.TemplateResponse(
+        "books/book_update.html",
+        book_form.__dict__
     )

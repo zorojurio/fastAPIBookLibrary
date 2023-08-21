@@ -2,7 +2,8 @@ from typing import List
 
 from connection import Session
 from models.books import Book
-from schemas.books import BookCreate, BooksList
+from schemas.books import BookCreate, BooksList, BookUpdate
+from webapp.forms.book_form import BookForm
 
 
 class BookHandler:
@@ -54,3 +55,23 @@ class BookHandler:
             user_id=book.user_id,
             id=book.id
         )
+
+    def update_book(self, book: dict, book_id):
+        existing_book = self.session.query(Book).filter(Book.id == book_id)
+        existing_book.update(book)
+        self.session.commit()
+
+    @staticmethod
+    def prepare_update_data(book_form: BookForm, image_path: str) -> dict:
+        book_data = {}
+        if image_path:
+            book_data['cover_image'] = image_path
+        if book_form.title:
+            book_data['title'] = book_form.title
+        if book_form.author:
+            book_data['author'] = book_form.author
+        if book_form.publication_date:
+            book_data['publication_date'] = book_form.publication_date
+        if book_form.isbn:
+            book_data['isbn'] = book_form.isbn
+        return book_data
