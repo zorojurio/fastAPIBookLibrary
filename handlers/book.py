@@ -1,5 +1,7 @@
 from typing import List
 
+from sqlalchemy import or_
+
 from connection import Session
 from models.books import Book
 from schemas.books import BookCreate, BooksList
@@ -80,3 +82,23 @@ class BookHandler:
         existing_book = self.session.query(Book).filter(Book.id == book_id)
         existing_book.delete()
         self.session.commit()
+
+    def find_by_title_or_author(self, search: str) -> List[BooksList]:
+        modeled_books = []
+        query = self.session.query(Book).filter(
+            or_(
+                Book.title.like(f"%{search}%"),
+                Book.author.like(f"%{search}%"),
+            )
+        )
+        for book in query.all():
+            modeled_books.append(BooksList(
+                title=book.title,
+                author=book.author,
+                publication_date=book.publication_date,
+                isbn=book.isbn,
+                cover_image=book.cover_image,
+                user_id=book.user_id,
+                id=book.id
+            ))
+        return modeled_books

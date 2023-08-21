@@ -14,6 +14,7 @@ from handlers.book import BookHandler
 from models.users import User
 from schemas.books import BookCreate
 from webapp.forms.book_form import BookForm
+from webapp.forms.search_form import SearchForm
 
 templates = Jinja2Templates(directory="templates")
 books_router = APIRouter(include_in_schema=False, prefix='/books')
@@ -222,3 +223,32 @@ async def delete_book_put(book_id: str,
     logger.info('Process started for Delete Book')
     book_handler = BookHandler(session=db)
     book_handler.delete_book(book_id)
+
+
+@books_router.get("/search/author", response_class=HTMLResponse, dependencies=[Depends(get_current_user_from_token)])
+async def search_book(request: Request):
+    render_data = {
+        'request': request,
+        'books': None
+    }
+    return templates.TemplateResponse(
+        "books/book_search.html",
+        render_data
+    )
+
+
+@books_router.post("/search/author", response_class=HTMLResponse, dependencies=[Depends(get_current_user_from_token)])
+async def search_book(request: Request, db: Session = Depends(get_db)):
+    form = SearchForm(request)
+    await form.load_data()
+    book_handler = BookHandler(session=db)
+    books = book_handler.find_by_title_or_author(form.search)
+    render_data = {
+        'request': request,
+        'books': books
+    }
+
+    return templates.TemplateResponse(
+        "books/book_search.html",
+        render_data
+    )

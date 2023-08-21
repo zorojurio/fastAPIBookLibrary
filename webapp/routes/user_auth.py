@@ -17,7 +17,6 @@ from webapp.forms.register_form import UserCreateForm
 
 templates = Jinja2Templates(directory="templates")
 auth = APIRouter(include_in_schema=False)
-auth.mount("/static", StaticFiles(directory="static"), name="static")
 
 logger = get_logger(__name__)
 
