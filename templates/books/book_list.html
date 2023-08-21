@@ -35,7 +35,7 @@
                         <td>{{ book.isbn }}</td>
                         <td>
                             <a href="/books/update/{{ book.id }}" class="btn btn-warning text-white btn-sm">Update</a>
-                            <a href="" class="btn btn-danger text-white btn-sm">Delete</a>
+                            <a  onclick="delete_book({{ book.id }})" class="btn btn-danger text-white btn-sm">Delete</a>
                         </td>
 
                     </tr>
@@ -54,4 +54,16 @@
 
 
 {% block scripts %}
+<script type="text/javascript">
+    function delete_book(id){
+        fetch('/books/delete/'+id,{
+            method:'DELETE',})
+        .then(data => {
+            window.location.href = '/books/list';
+        })
+        .catch(error => {
+            console.log(error);
+        });
+    }
+</script>
 {% endblock %}

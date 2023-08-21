@@ -75,3 +75,8 @@ class BookHandler:
         if book_form.isbn:
             book_data['isbn'] = book_form.isbn
         return book_data
+
+    def delete_book(self, book_id):
+        existing_book = self.session.query(Book).filter(Book.id == book_id)
+        existing_book.delete()
+        self.session.commit()

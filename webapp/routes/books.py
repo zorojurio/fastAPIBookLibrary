@@ -207,3 +207,15 @@ async def update_book_put(book_id: str,
         "books/book_update.html",
         book_form.__dict__
     )
+
+
+@books_router.delete("/delete/{book_id}",
+                     response_class=HTMLResponse,
+                     dependencies=[Depends(get_current_user_from_token)]
+                     )
+async def update_book_put(book_id: str,
+                          request: Request,
+                          db: Session = Depends(get_db)):
+    logger.info('Process started for Delete Book')
+    book_handler = BookHandler(session=db)
+    book_handler.delete_book(book_id)
