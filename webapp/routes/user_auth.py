@@ -4,7 +4,6 @@ from pydantic_core import ValidationError
 from sqlalchemy.exc import IntegrityError
 from starlette import status
 from starlette.responses import HTMLResponse
-from starlette.staticfiles import StaticFiles
 
 from connection import Session, get_db
 from core.logger import get_logger

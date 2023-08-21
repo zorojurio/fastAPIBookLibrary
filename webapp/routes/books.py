@@ -225,8 +225,11 @@ async def delete_book_put(book_id: str,
     book_handler.delete_book(book_id)
 
 
-@books_router.get("/search/author", response_class=HTMLResponse, dependencies=[Depends(get_current_user_from_token)])
-async def search_book(request: Request):
+@books_router.get("/search/author",
+                  response_class=HTMLResponse,
+                  dependencies=[Depends(get_current_user_from_token
+                                        )])
+async def search_book_get(request: Request):
     render_data = {
         'request': request,
         'books': None
@@ -237,8 +240,14 @@ async def search_book(request: Request):
     )
 
 
-@books_router.post("/search/author", response_class=HTMLResponse, dependencies=[Depends(get_current_user_from_token)])
-async def search_book(request: Request, db: Session = Depends(get_db)):
+@books_router.post("/search/author",
+                   response_class=HTMLResponse,
+                   dependencies=[Depends(get_current_user_from_token)]
+                   )
+async def search_book_post(
+        request: Request,
+        db: Session = Depends(get_db)
+):
     form = SearchForm(request)
     await form.load_data()
     book_handler = BookHandler(session=db)
@@ -247,7 +256,6 @@ async def search_book(request: Request, db: Session = Depends(get_db)):
         'request': request,
         'books': books
     }
-
     return templates.TemplateResponse(
         "books/book_search.html",
         render_data

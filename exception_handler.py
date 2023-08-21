@@ -16,6 +16,7 @@ def add_exception_handler(app: FastAPI):
     :param app: FastAPI app instance
     :return: None
     """
+
     @app.exception_handler(CustomAuthException)
     async def handle_auth_exception(
             request: Request, exc: CustomAuthException

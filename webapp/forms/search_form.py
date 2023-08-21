@@ -12,5 +12,3 @@ class SearchForm:
     async def load_data(self) -> None:
         form = await self.request.form()
         self.search = form.get("search")
-
-
