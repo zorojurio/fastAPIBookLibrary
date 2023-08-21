@@ -2,7 +2,7 @@ from typing import List
 
 from connection import Session
 from models.books import Book
-from schemas.books import BookCreate, BooksList, BookUpdate
+from schemas.books import BookCreate, BooksList
 from webapp.forms.book_form import BookForm
 
 

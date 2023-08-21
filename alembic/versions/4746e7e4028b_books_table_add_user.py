@@ -1,7 +1,7 @@
 """books table add user
 
 Revision ID: 4746e7e4028b
-Revises: 
+Revises:
 Create Date: 2023-08-20 19:44:50.244710
 
 """

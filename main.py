@@ -35,11 +35,13 @@ def configure_static(application):
     )
 
 
-
 def start_application():
     application = FastAPI()
     create_tables()
-    application.add_middleware(SessionMiddleware, secret_key=settings.SECRET_KEY)
+    application.add_middleware(
+        SessionMiddleware,
+        secret_key=settings.SECRET_KEY
+    )
     include_router(application)
     configure_static(application)
     add_exception_handler(application)

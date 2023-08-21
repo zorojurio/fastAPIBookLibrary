@@ -128,7 +128,8 @@ async def view_book_get(request: Request,
     logger.info('Process started for Get Book List Page')
 
     book_handler = BookHandler(session=db)
-    book = book_handler.book_by_userid_book_id(current_user.id, book_id=book_id)
+    book = book_handler.book_by_userid_book_id(
+        current_user.id, book_id=book_id)
     render_data = {
         'request': request,
         'book': book
@@ -145,11 +146,13 @@ async def view_book_get(request: Request,
                   )
 async def update_book_get(book_id: str,
                           request: Request,
-                          current_user: User = Depends(get_current_user_from_token),
+                          current_user: User = Depends(
+                              get_current_user_from_token),
                           db: Session = Depends(get_db)):
     logger.info('Process started for Get Book Update Page')
     book_handler = BookHandler(session=db)
-    book = book_handler.book_by_userid_book_id(current_user.id, book_id=book_id)
+    book = book_handler.book_by_userid_book_id(
+        current_user.id, book_id=book_id)
     render_data = {
         'request': request,
         'page_type': 'Update Book',

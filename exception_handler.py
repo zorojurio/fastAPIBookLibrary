@@ -14,8 +14,10 @@ templates = Jinja2Templates(directory="templates")
 
 def add_exception_handler(app: FastAPI):
     @app.exception_handler(CustomAuthException)
-    async def handle_auth_exception(request: Request, exc: CustomAuthException):
-        error_log = f'User Not Authenticated'
+    async def handle_auth_exception(
+            request: Request, exc: CustomAuthException
+    ):
+        error_log = 'User Not Authenticated'
         logger.error(error_log)
         if settings.DEBUG_MODE:
             logger.error(f'Endpoint: {request.url} Method: {request.method}')

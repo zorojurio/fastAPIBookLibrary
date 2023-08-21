@@ -1,7 +1,7 @@
 from typing import Dict
 from typing import Optional
 
-from fastapi import HTTPException, Depends
+from fastapi import Depends
 from fastapi import Request
 from fastapi import status
 from fastapi.openapi.models import OAuthFlows as OAuthFlowsModel
