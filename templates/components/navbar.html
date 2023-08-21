@@ -12,20 +12,25 @@
                 <a class="nav-link" href="/books/create">Create Books </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">Features</a>
+                <a class="nav-link" href="/books/list">My Books</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="#">Pricing</a>
             </li>
         </ul>
         <ul class="navbar-nav mr-left">
-            <li class="nav-item active">
-                <a class="nav-link" href="/register"> Sign Up </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/login">Sign In</a>
-            </li>
-
+            {% if request.session.get("authenticated") %}
+                <li class="nav-item active">
+                    <a class="nav-link" href="#"> Hello, {{ request.session.get("username") }} </a>
+                </li>
+            {% else %}
+                <li class="nav-item active">
+                    <a class="nav-link" href="/register"> Sign Up </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/login">Sign In</a>
+                </li>
+            {% endif %}
         </ul>
     </div>
 </nav>

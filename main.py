@@ -1,7 +1,9 @@
 from fastapi import FastAPI
+from starlette.middleware.sessions import SessionMiddleware
 from starlette.staticfiles import StaticFiles
 
 from connection import engine
+from core.configs import settings
 from exception_handler import add_exception_handler
 from models import users, books
 from webapp.routes.books import books_router
@@ -31,6 +33,7 @@ def configure_static(application):
 def start_application():
     application = FastAPI()
     create_tables()
+    application.add_middleware(SessionMiddleware, secret_key=settings.SECRET_KEY)
     include_router(application)
     configure_static(application)
     add_exception_handler(application)

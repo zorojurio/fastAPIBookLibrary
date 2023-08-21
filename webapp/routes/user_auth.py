@@ -49,6 +49,8 @@ async def login(request: Request, db: Session = Depends(get_db)):
         auth_user = user_handler.authenticate_user(user)
         if auth_user:
             logger.debug(f'{user.username} Authenticated Successfully')
+            request.session["authenticated"] = True
+            request.session["username"] = user.username
             response = responses.RedirectResponse(
                 "/", status_code=status.HTTP_302_FOUND
             )
