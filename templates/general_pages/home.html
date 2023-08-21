@@ -16,7 +16,7 @@
             <div class="col-5 ml-2">
                 <div class="card">
                     <div class="card-body">
-                        <h2 class="text-primary">Total Books:
+                        <h2 class="text-primary">Total Books: {{ total_books }}
                         </h2>
                         {% for error in errors %}
                             <div class="alert alert-danger alert-dismissible">
@@ -32,7 +32,13 @@
             <div class="col-5">
                 <div class="card">
                     <div class="card-body">
-                        <h2 class="text-primary">Dashboard</h2>
+                        <h2 class="text-primary">Recent Books: {{ recent_book_count }}</h2>
+                        <ol>
+                            {% for book in recent_books %}
+                        	<li>{{ book.title }}</li>
+                            {% endfor %}
+                        </ol>
+
                         {% for error in errors %}
                             <div class="alert alert-danger alert-dismissible">
                                 <button type="button" class="close" data-dismiss="alert">&times;</button>

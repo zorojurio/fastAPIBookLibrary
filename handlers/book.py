@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta
 from typing import List
 
 from sqlalchemy import or_
@@ -102,3 +103,25 @@ class BookHandler:
                 id=book.id
             ))
         return modeled_books
+
+    def total_books_by_user(self, user_id):
+        book = self.session.query(Book).filter_by(
+            user_id=user_id)
+        return book.count()
+
+    def recent_books_by_user(self, user_id):
+        modeled_books = []
+        yesterday_date = datetime.now() - timedelta(days=1)
+        query = self.session.query(Book).filter_by(
+            user_id=user_id).filter(Book.created_at > yesterday_date)
+        for book in query.all():
+            modeled_books.append(BooksList(
+                title=book.title,
+                author=book.author,
+                publication_date=book.publication_date,
+                isbn=book.isbn,
+                cover_image=book.cover_image,
+                user_id=book.user_id,
+                id=book.id
+            ))
+        return modeled_books, query.count()
