@@ -28,6 +28,12 @@ def configure_static(application):
         StaticFiles(directory="static"),
         name="static"
     )
+    application.mount(
+        "/images",
+        StaticFiles(directory="images"),
+        name="images"
+    )
+
 
 
 def start_application():

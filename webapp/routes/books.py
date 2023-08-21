@@ -57,7 +57,7 @@ async def create_book(request: Request,
                 logger.debug(f'Saving image in {image_path}')
                 with open(image_path, 'wb') as file:
                     file.write(file_content)
-
+                image_path = cover_image.filename
             book = BookCreate(
                 title=book_form.title,
                 author=book_form.author,
@@ -72,7 +72,7 @@ async def create_book(request: Request,
             book_handler = BookHandler(session=db)
             book_handler.create_new_book(book)
             return responses.RedirectResponse(
-                "/", status_code=status.HTTP_302_FOUND
+                "/books/list", status_code=status.HTTP_302_FOUND
             )
         except IntegrityError as i:
             logger.error(f'Duplicate auther or title {i}')
@@ -131,10 +131,10 @@ async def view_book_get(request: Request,
     book = book_handler.book_by_userid_book_id(current_user.id, book_id=book_id)
     render_data = {
         'request': request,
-        'books': book
+        'book': book
     }
     return templates.TemplateResponse(
-        'books/book_list.html',
+        'books/book_detail.html',
         render_data
     )
 
@@ -180,6 +180,7 @@ async def update_book_put(book_id: str,
                 logger.debug(f'Saving image in {image_path}')
                 with open(image_path, 'wb') as file:
                     file.write(file_content)
+                image_path = cover_image.filename
             book_handler = BookHandler(session=db)
             book_data = book_handler.prepare_update_data(book_form, image_path)
             book_handler.update_book(book_data, book_id)
@@ -213,8 +214,7 @@ async def update_book_put(book_id: str,
                      response_class=HTMLResponse,
                      dependencies=[Depends(get_current_user_from_token)]
                      )
-async def update_book_put(book_id: str,
-                          request: Request,
+async def delete_book_put(book_id: str,
                           db: Session = Depends(get_db)):
     logger.info('Process started for Delete Book')
     book_handler = BookHandler(session=db)
