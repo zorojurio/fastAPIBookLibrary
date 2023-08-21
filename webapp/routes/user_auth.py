@@ -33,6 +33,15 @@ async def sign_in(request: Request):
     )
 
 
+@auth.get("/logout")
+async def make_logout():
+    response = responses.RedirectResponse(
+        "/login", status_code=status.HTTP_302_FOUND
+    )
+    response.set_cookie(key="Authorization", value="", expires=0, httponly=True)
+    return response
+
+
 @auth.post("/login")
 async def login(request: Request, db: Session = Depends(get_db)):
     logger.info('Process started for Post Login Page')
